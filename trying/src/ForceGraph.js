@@ -1,42 +1,3 @@
-// import React, { useEffect, useRef } from 'react';
-// import ForceGraph3D from 'react-force-graph-3d'; // Import the library
-// import * as d3 from 'd3'; // Import D3.js
-
-// const ForceGraph = () => {
-//   const graphRef = useRef(null);
-
-// //   useEffect(() => {
-// //     const graphData = {
-// //       nodes: [{ id: 'Node 1' }, { id: 'Node 2' }],
-// //       links: [{ source: 'Node 1', target: 'Node 2' }],
-// //     };
-// useEffect(() => {
-//     const graphData = {
-//       nodes: [{ id: 'Node 1' }, { id: 'Node 2' }],
-//       links: [{ source: 'Node 1', target: 'Node 2' }],
-//     };
-
-//     // <ForceGraph3D graphData={graphData}/>
-
-//     // Use ForceGraph3D as a function
-//     // const fg = ForceGraph3D(); 
-//     // fg(graphRef.current)
-//     //   .graphData(graphData)
-//     //   .onNodeClick((node) => {
-//     //     console.log('Node clicked:', node);
-//     //   });
-
-//     return () => {
-//     //   fg.pauseAnimation();
-//     <ForceGraph3D graphData={graphData}/>
-//     };
-//   }, []);
-
-//   return <div ref={graphRef} />;
-// };
-
-// export default ForceGraph;
-
 
 
 import React, { useRef } from 'react';
@@ -46,43 +7,17 @@ import * as THREE from 'three';
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
 
-//   const graphData = {
-//     nodes: [{ id: 'Node 1' }, { id: 'Node 2' }, { id: 'Node 3' }, { id: 'Node 4' }],
-//     links: [{ source: 'Node 1', target: 'Node 2' }, { source: 'Node 1', target: 'Node 4' }, { source: 'Node 3', target: 'Node 4' }, { source: 'Node 2', target: 'Node 3' }],
-//   };
-
-// const graphData = {
-//     nodes: [
-//       { id: 'Node 1', x: 0, y: 0, z: 0 },
-//       { id: 'Node 2', x: 10, y: 0, z: 0 },
-//       { id: 'Node 3', x: 0, y: 10, z: 0 },
-//       { id: 'Node 4', x: 10, y: 10, z: 0 },
-//       { id: 'Node 5', x: 20, y: 0, z: 0 }, // Additional node
-//       { id: 'Node 6', x: 0, y: 20, z: 0 }, // Additional node
-//       // Add more nodes as needed
-//     ],
-//     links: [
-//       { source: 'Node 1', target: 'Node 2' },
-//       { source: 'Node 1', target: 'Node 4' },
-//       { source: 'Node 3', target: 'Node 4' },
-//       { source: 'Node 2', target: 'Node 3' },
-//       { source: 'Node 5', target: 'Node 6' }, 
-      
-//     ],
-//   };
-  
-
   return (
     <div ref={graphRef}>
       <ForceGraph3D
         graphData={data}
-        // You can add additional props and configurations here
         nodeAutoColorBy="id" 
         nodeLabel="name"
         linkCurvature={0.25}
         nodeThreeObject={node => {
-          // You can use this function to further customize the nodes if needed
+        
         }}
+        
         nodeCanvasObject={(node, ctx, globalScale) => {
         const label = node.name;
         const fontSize = 12 / globalScale;
