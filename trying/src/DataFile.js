@@ -1,3 +1,5 @@
+
+
 const networkData = 
 {network:
 {items:
@@ -14,6 +16,7 @@ const networkData =
     {"id":10,"label":"a68","x":-0.8401,"y":0.5106,"cluster":4,"weights":{"Occurrences":19},"scores":{"Avg. pub. year":1991.7368}},
     {"id":11,"label":"aberrant accumulation","x":-0.6376,"y":-0.0818,"cluster":1,"weights":{"Occurrences":10},"scores":{"Avg. pub. year":2010}},{"id":12,"label":"aberrant phosphorylation","x":-0.8765,"y":-0.0679,"cluster":1,"weights":{"Occurrences":19},"scores":{"Avg. pub. year":2005.4737}},
     {"id":13,"label":"aberrant tau phosphorylation","x":-0.6678,"y":-0.2444,"cluster":1,"weights":{"Occurrences":13},"scores":{"Avg. pub. year":2006.9231}},
+    /*
     {"id":14,"label":"abeta clearance","x":-0.1161,"y":-0.3591,"cluster":1,"weights":{"Occurrences":34},"scores":{"Avg. pub. year":2012.2059}},{"id":15,"label":"abeta degradation","x":-0.2775,"y":-0.4199,"cluster":1,"weights":{"Occurrences":14},"scores":{"Avg. pub. year":2009.7143}},
     {"id":16,"label":"abeta fibril","x":-0.1323,"y":-0.2366,"cluster":1,"weights":{"Occurrences":16},"scores":{"Avg. pub. year":2009.25}},{"id":17,"label":"abeta formation","x":-0.4499,"y":-0.3543,"cluster":1,"weights":{"Occurrences":15},"scores":{"Avg. pub. year":2008.5333}},{"id":18,"label":"abeta generation","x":-0.3564,"y":-0.3079,"cluster":1,"weights":{"Occurrences":33},"scores":{"Avg. pub. year":2010.697}},{"id":19,"label":"abeta immunotherapy","x":0.1111,"y":-0.3726,"cluster":1,"weights":{"Occurrences":23},"scores":{"Avg. pub. year":2009.7826}},
     {"id":20,"label":"abeta metabolism","x":0.4111,"y":-0.4599,"cluster":1,"weights":{"Occurrences":19},"scores":{"Avg. pub. year":2010.3158}},{"id":21,"label":"abeta precursor protein","x":-0.43,"y":-0.1763,"cluster":1,"weights":{"Occurrences":13},"scores":{"Avg. pub. year":2010.1538}},
@@ -40,7 +43,7 @@ const networkData =
     {"id":2261,"label":"x tg ad mouse","x":-0.3488,"y":-0.3973,"cluster":1,"weights":{"Occurrences":11},"scores":{"Avg. pub. year":2011.8182}},{"id":2262,"label":"y maze","x":-0.4092,"y":-0.4455,"cluster":1,"weights":{"Occurrences":12},"scores":{"Avg. pub. year":2010.75}},{"id":2263,"label":"year","x":0.6345,"y":0.0582,"cluster":2,"weights":{"Occurrences":825},"scores":{"Avg. pub. year":2008.7297}},{"id":2264,"label":"year old man","x":0.1807,"y":0.4902,"cluster":3,"weights":{"Occurrences":14},"scores":{"Avg. pub. year":2003.7857}},
     {"id":2265,"label":"year old woman","x":0.2402,"y":0.492,"cluster":3,"weights":{"Occurrences":12},"scores":{"Avg. pub. year":2004.5833}},{"id":2266,"label":"yeast","x":-0.7887,"y":-0.0131,"cluster":4,"weights":{"Occurrences":13},"scores":{"Avg. pub. year":2010.3846}},{"id":2267,"label":"ykl","x":1.3593,"y":-0.0401,"cluster":2,"weights":{"Occurrences":11},"scores":{"Avg. pub. year":2013.4545}},
     {"id":2268,"label":"young age","x":-0.392,"y":-0.3048,"cluster":1,"weights":{"Occurrences":11},"scores":{"Avg. pub. year":2012.2727}}
-
+*/
 ],
 links:[{"source_id":1,"target_id":9,"strength":6},{"source_id":1,"target_id":6,"strength":3},{"source_id":1,"target_id":3,"strength":2},{"source_id":1,"target_id":7,"strength":9},{"source_id":1,"target_id":8,"strength":0},{"source_id":1,"target_id":2,"strength":4},{"source_id":6,"target_id":5,"strength":10},{"source_id":7,"target_id":1,"strength":2},{"source_id":1,"target_id":2,"strength":1},{"source_id":1,"target_id":10,"strength":5}, 
 /*
@@ -48,19 +51,26 @@ links:[{"source_id":1,"target_id":9,"strength":6},{"source_id":1,"target_id":6,"
 */
 ]}}
 
+
+
  export const data = {
     nodes: networkData.network.items.map(item => ({
       id: item.id,
       name: item.label,
       x: item.x,
       y: item.y,
+      z: 0,
+      // nodeRelSize: 0.1*item.weights.Occurrences,
+      // size: item.weights.Occurrences,
+    //  size: 15,
+      // z: Math.sqrt((item.x*item.x)+(item.y*item.y)),
       cluster: item.cluster,
       // Add other node properties here...
     })),
     links: networkData.network.links.map(link=>({
         source: link.source_id,
         target:  link.target_id,
-        linkOpacity: 0.1*link.strength,
+        linkOpacity: 0.001*link.strength,
         // strength: link.strength,
     })
   )

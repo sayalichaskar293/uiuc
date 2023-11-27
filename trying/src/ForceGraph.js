@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d'; // Import the library
-import * as THREE from 'three';
+import * as d3 from 'd3';
 
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
@@ -33,7 +33,7 @@ const ForceGraph = ({data}) => {
 
         nodeAutoColorBy={(node) => assignClusters(node)} // Automatically color nodes based on clusters
       nodeColor={(node) => getClusterColor(assignClusters(node))}
-
+      // nodeRelSize={(node) => node.size}
         nodeLabel="name"
         linkCurvature={0.25}
         nodeThreeObject={node => {
@@ -62,56 +62,11 @@ const ForceGraph = ({data}) => {
         ctx.fillStyle = 'black'; // Adjust text color as needed
         ctx.fillText(label, node.x, node.y);
       }}
-      // nodeThreeObject={node => {
-      //   // Use a group to position both the sphere and label
-      //   const obj = new THREE.Group();
-        
-      //   // Add a sphere (you can customize this)
-      //   const sphereGeometry = new THREE.SphereGeometry(5);
-      //   const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-      //   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-      //   obj.add(sphere);
-
-      //   // Add label sprite
-      //   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(createLabel(node.name)) }));
-      //   sprite.scale.set(100, 50, 1);
-      //   obj.add(sprite);
-
-      //   return obj;
-      // }}
-
-      // linkThreeObjectExtend={true}
-      // linkThreeObject={link => {
-      //   // Customize link rendering here
-      //   const lineGeometry = new THREE.BufferGeometry();
-      //   lineGeometry.setAttribute(
-      //     'position',
-      //     new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3)
-      //   );
-
-      //   const lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
-      //   const line = new THREE.Line(lineGeometry, lineMaterial);
-
-      //   return line;
-      // }}
-
-        // linkOpacity={d => d.opacity}
-       // For example, auto-color nodes by id
-        // onNodeClick={(node) => {
-        //   console.log('Node clicked:', node);
-        // }}
+     
       />
     </div>
   );
 };
 
-function createLabel(name) {
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  context.font = '20px Arial';
-  context.fillStyle = 'white';
-  context.fillText(name, 10, 25);
-  return canvas;
-}
 
 export default ForceGraph;
