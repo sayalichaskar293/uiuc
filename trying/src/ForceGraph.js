@@ -1,15 +1,12 @@
-
-
-import React, { useRef } from 'react';
+import React, { useRef,useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d'; // Import the library
 import * as d3 from 'd3';
+import * as THREE from 'three';
+
 
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
 
-  const assignClusters = (node) => node.cluster || 0; // Default to 0 if no cluster is assigned
-
-  // Define a function to map clusters to colors
   const getClusterColor = (cluster) => {
     const colorMap = {
          
@@ -25,20 +22,90 @@ const ForceGraph = ({data}) => {
     return colorMap[cluster] || 'gray'; // Default to gray for unknown clusters
   };;
 
+  const assignClusters = (node) => {
+   
+    if (!node || node.cluster === undefined || node.cluster === null) {
+     
+      return 0; 
+    }
+    return node.cluster;
+  };
+  const defaultColors1 = {};
+  data.nodes.forEach((node) => {
+    defaultColors1[node.id] = getClusterColor(assignClusters(node));
+  });
+    
+
+  const [nodeColor, setNodeColor] = useState(() => {
+    const defaultColors = {};
+    data.nodes.forEach((node) => {
+      defaultColors[node.id] = getClusterColor(assignClusters(node));
+    });
+    return defaultColors;
+  });
+
+  const handleNodeHover = (node) => {
+    if (node) {
+      const linkedNodeIds = data.links
+      .filter((link) => link.source.id === node.id || link.target.id === node.id)
+      .flatMap((link) => [link.source.id, link.target.id]);
+  console.log(linkedNodeIds)
+      const updatedColors = {};
+      data.nodes.forEach((n) => {
+        if (n.id === node.id || linkedNodeIds.includes(n.id)) {
+          updatedColors[n.id] = getClusterColor(assignClusters(n));
+        } else {
+          updatedColors[n.id] = 'rgba(200, 200, 200, 2)';
+        }
+      });
+  
+      setNodeColor(updatedColors);
+    } else {
+      setNodeColor(defaultColors1); // Reset colors to their initial state
+    }
+  };
+  
+  
+
   return (
     <div ref={graphRef}>
       <ForceGraph3D
         graphData={data}
-        // nodeAutoColorBy="id" 
 
-        nodeAutoColorBy={(node) => assignClusters(node)} // Automatically color nodes based on clusters
-      nodeColor={(node) => getClusterColor(assignClusters(node))}
+      nodeAutoColorBy={(node) => assignClusters(node)} 
+      // nodeColor={(node) => getClusterColor(assignClusters(node))}
+      nodeColor={(node) => nodeColor[node.id]}
       // nodeRelSize={(node) => node.size}
         nodeLabel="name"
         linkCurvature={0.25}
-        nodeThreeObject={node => {
+        nodeVal={(node) => node.size || 7}
+        linkWidth={(node)=>node.strength}
+        // onNodeHover={(node) => {
+        //   if (!node) {
+        //     setHoveredNode(null);
+        //     setNodeColor((prevColors) => {
+        //       const updatedColors = { ...prevColors };
+        //       Object.keys(prevColors).forEach((nodeId) => {
+        //         updatedColors[nodeId] = getClusterColor(assignClusters(data.nodes.find((n) => n.id === nodeId)));
+        //       });
+        //       return updatedColors;
+        //     });
+        //     return;
+        //   }
+        //   setHoveredNode(node);
+        //   updateNodeColor(node.id);
+
+        // }}
+
+        onNodeHover={handleNodeHover}
+          // nodeThreeObject={(node) => {
+          //   const sphereGeometry = new THREE.SphereGeometry(5);
+          //   const color = nodeColor[node.id];
+          //   const sphereMaterial = new THREE.MeshBasicMaterial({ color });
+          //   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+          //   return sphere;
+          // }}
         
-        }}
 
         nodeCanvasObject={(node, ctx, globalScale) => {
         const label = node.name;
