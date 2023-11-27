@@ -6,7 +6,7 @@ import * as THREE from 'three';
 
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
-
+  const [hoveredNode, setHoveredNode] =useState(null);
   const getClusterColor = (cluster) => {
     const colorMap = {
          
@@ -21,6 +21,7 @@ const ForceGraph = ({data}) => {
     }
     return colorMap[cluster] || 'gray'; // Default to gray for unknown clusters
   };;
+  
 
   const assignClusters = (node) => {
    
@@ -44,8 +45,11 @@ const ForceGraph = ({data}) => {
     return defaultColors;
   });
 
+  
+
   const handleNodeHover = (node) => {
     if (node) {
+      setHoveredNode(node);
       const linkedNodeIds = data.links
       .filter((link) => link.source.id === node.id || link.target.id === node.id)
       .flatMap((link) => [link.source.id, link.target.id]);
@@ -73,38 +77,21 @@ const ForceGraph = ({data}) => {
         graphData={data}
 
       nodeAutoColorBy={(node) => assignClusters(node)} 
-      // nodeColor={(node) => getClusterColor(assignClusters(node))}
+      
       nodeColor={(node) => nodeColor[node.id]}
-      // nodeRelSize={(node) => node.size}
+      
         nodeLabel="name"
         linkCurvature={0.25}
         nodeVal={(node) => node.size || 7}
         linkWidth={(node)=>node.strength}
-        // onNodeHover={(node) => {
-        //   if (!node) {
-        //     setHoveredNode(null);
-        //     setNodeColor((prevColors) => {
-        //       const updatedColors = { ...prevColors };
-        //       Object.keys(prevColors).forEach((nodeId) => {
-        //         updatedColors[nodeId] = getClusterColor(assignClusters(data.nodes.find((n) => n.id === nodeId)));
-        //       });
-        //       return updatedColors;
-        //     });
-        //     return;
-        //   }
-        //   setHoveredNode(node);
-        //   updateNodeColor(node.id);
-
-        // }}
+        linkColor={(link) => {
+          const sourceNode = link.source;
+          return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'rgba(200, 200, 200, 2)';
+        }}
+        
 
         onNodeHover={handleNodeHover}
-          // nodeThreeObject={(node) => {
-          //   const sphereGeometry = new THREE.SphereGeometry(5);
-          //   const color = nodeColor[node.id];
-          //   const sphereMaterial = new THREE.MeshBasicMaterial({ color });
-          //   const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-          //   return sphere;
-          // }}
+          
         
 
         nodeCanvasObject={(node, ctx, globalScale) => {
@@ -131,6 +118,14 @@ const ForceGraph = ({data}) => {
       }}
      
       />
+      {hoveredNode && (
+        <div style={{ position: 'absolute', bottom: 0, background: 'white', padding: '10px', display: 'flex' }}>
+          <p style={{ marginRight: '10px' }}>ID: {hoveredNode.id}</p>
+          <p style={{ marginRight: '10px' }}>Name: {hoveredNode.name}</p>
+          <p style={{ marginRight: '10px' }}>Cluster: {hoveredNode.cluster}</p>
+          <p>Total link Strength: {hoveredNode.size}</p>
+        </div>
+      )}
     </div>
   );
 };
