@@ -4,6 +4,7 @@ import ForceGraph3D from 'react-force-graph-3d'; // Import the library
 
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
+  const [hoveredNode, setHoveredNode] = useState(null);
 
   const getClusterColor = (cluster) => {
     const colorMap = {
@@ -43,6 +44,7 @@ const ForceGraph = ({data}) => {
   });
 
   const handleNodeHover = (node) => {
+    setHoveredNode(node);
     if (node) {
       const linkedNodeIds = data.links
       .filter((link) => link.source.id === node.id || link.target.id === node.id)
@@ -115,6 +117,14 @@ const ForceGraph = ({data}) => {
       }}
      
       />
+      {hoveredNode && (
+        <div style={{ position: 'absolute', bottom: 0, background: 'white', padding: '10px', display: 'flex' }}>
+          <p style={{ marginRight: '10px' }}>ID: {hoveredNode.id}</p>
+          <p style={{ marginRight: '10px' }}>Name: {hoveredNode.name}</p>
+          <p style={{ marginRight: '10px' }}>Cluster: {hoveredNode.cluster}</p>
+          <p>Total link Strength: {hoveredNode.size}</p>
+        </div>
+      )}
     </div>
   );
 };
