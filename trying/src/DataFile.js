@@ -62,7 +62,7 @@ links:[{"source_id":1,"target_id":9,"strength":6},{"source_id":1,"target_id":6,"
       z: 0,
       // nodeRelSize: 0.1*item.weights.Occurrences,
       // size: item.weights.Occurrences,
-    //  size: 15,
+     size: 0.1*item.weights.Occurrences,
       // z: Math.sqrt((item.x*item.x)+(item.y*item.y)),
       cluster: item.cluster,
       // Add other node properties here...
@@ -70,6 +70,7 @@ links:[{"source_id":1,"target_id":9,"strength":6},{"source_id":1,"target_id":6,"
     links: networkData.network.links.map(link=>({
         source: link.source_id,
         target:  link.target_id,
+        strength: 0.1*link.strength,
         linkOpacity: 0.001*link.strength,
         // strength: link.strength,
     })
