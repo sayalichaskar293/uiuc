@@ -2,13 +2,14 @@
 
 import React, { useRef } from 'react';
 import ForceGraph3D from 'react-force-graph-3d'; // Import the library
-import * as d3 from 'd3';
+
 
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
 
   const assignClusters = (node) => node.cluster || 0; // Default to 0 if no cluster is assigned
 
+  
   // Define a function to map clusters to colors
   const getClusterColor = (cluster) => {
     const colorMap = {
@@ -23,7 +24,14 @@ const ForceGraph = ({data}) => {
 
     }
     return colorMap[cluster] || 'gray'; // Default to gray for unknown clusters
+
+   
   };;
+
+  const maxNodeSize = Math.max(...data.nodes.map(node => node.size));
+  data.nodes.forEach(node => {
+    node.nodeRelSize = node.size / maxNodeSize * 10; // Adjust the scaling factor (10) as needed
+  });
 
   return (
     <div ref={graphRef}>
@@ -33,7 +41,9 @@ const ForceGraph = ({data}) => {
 
         nodeAutoColorBy={(node) => assignClusters(node)} // Automatically color nodes based on clusters
       nodeColor={(node) => getClusterColor(assignClusters(node))}
-      // nodeRelSize={(node) => node.size}
+      // nodeRelSize={(node) => node.size || 7}
+      // nodeRelSize = {data.nodes[0].size}
+      nodeVal={(node) => node.size || 7}
         nodeLabel="name"
         linkCurvature={0.25}
         nodeThreeObject={node => {
