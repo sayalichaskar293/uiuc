@@ -71,7 +71,7 @@ links:[{"source_id":1,"target_id":9,"strength":6},{"source_id":1,"target_id":6,"
     links: networkData.network.links.map(link=>({
         source: link.source_id,
         target:  link.target_id,
-        linkOpacity: 0.01*link.strength,
+        linkOpacity: 0.1*link.strength,
         strength:0.1*link.strength
         // strength: link.strength,
     })
