@@ -8,20 +8,18 @@ const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
   const [hoveredNode, setHoveredNode] =useState(null);
   const getClusterColor = (cluster) => {
-    const colorMap = {
-         
+    const colorMap = {         
       1: '#00FF00',  
       2: '#0000FF',   
       3: '#FFFF00',
       4: '#FF0000',
       5: '#FFFFFF',
       6: '#800080',
-
-
     }
     return colorMap[cluster] || 'gray'; // Default to gray for unknown clusters
   };;
   
+
 
   const assignClusters = (node) => {
    
@@ -35,7 +33,25 @@ const ForceGraph = ({data}) => {
   data.nodes.forEach((node) => {
     defaultColors1[node.id] = getClusterColor(assignClusters(node));
   });
-    
+
+  const defaultColors2 = {};
+  data.links.forEach((link) => {
+  const sourceCluster = assignClusters(link.source);
+  const sourceColor = getClusterColor(sourceCluster);
+  
+  defaultColors2[`${link.source.id}-${link.target.id}`] = sourceColor;
+});
+
+const [linkColor, setLinkColor] = useState(() => {
+  const defaultColors2 = {};
+  data.links.forEach((link) => {
+    const sourceCluster = assignClusters(link.source);
+    const sourceColor = getClusterColor(sourceCluster);
+    defaultColors2[`${link.source.id}-${link.target.id}`] = sourceColor;
+    // You might need to adjust this based on your data structure
+  });
+  return defaultColors2;
+});
 
   const [nodeColor, setNodeColor] = useState(() => {
     const defaultColors = {};
@@ -45,34 +61,79 @@ const ForceGraph = ({data}) => {
     return defaultColors;
   });
 
-  
-
   const handleNodeHover = (node) => {
     if (node) {
       setHoveredNode(node);
+  
       const linkedNodeIds = data.links
-      .filter((link) => link.source.id === node.id || link.target.id === node.id)
-      .flatMap((link) => [link.source.id, link.target.id]);
-  console.log(linkedNodeIds)
+        .filter((link) => link.source.id === node.id || link.target.id === node.id)
+        .flatMap((link) => [link.source.id, link.target.id]);
+  
       const updatedColors = {};
+      const updatedLinkColors = { ...linkColor }; // Create a copy of current link colors
+  
       data.nodes.forEach((n) => {
         if (n.id === node.id || linkedNodeIds.includes(n.id)) {
           updatedColors[n.id] = getClusterColor(assignClusters(n));
         } else {
-          updatedColors[n.id] = 'rgba(200, 200, 200, 2)';
+          updatedColors[n.id] = 'rgba(200, 200, 200, 0.5)';
+        }
+      });
+  
+      data.links.forEach((link) => {
+        const sourceId = link.source.id;
+        const targetId = link.target.id;
+        const linkId = `${sourceId}-${targetId}`;
+
+        if (linkedNodeIds.includes(sourceId) && linkedNodeIds.includes(targetId)) {
+          updatedLinkColors[linkId] = getClusterColor(assignClusters(link.source));
+        } else {
+          updatedLinkColors[linkId] = 'rgba(200, 200, 200, 0.5)';
         }
       });
   
       setNodeColor(updatedColors);
+      setLinkColor(updatedLinkColors);
     } else {
-      setNodeColor(defaultColors1); // Reset colors to their initial state
+      setNodeColor(defaultColors1);
+      setLinkColor(defaultColors2);
     }
   };
   
-  
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = (searchInput) => {
+    setSearchTerm(searchInput);
+    const searchLower = searchInput.toLowerCase();
+
+    const matchingNode = data.nodes.find(
+      (node) => node.name.toLowerCase() === searchLower
+    );
+
+    if (matchingNode) {
+      const updatedNodeColors = {};
+      data.nodes.forEach((node) => {
+        if (node.id === matchingNode.id) {
+          updatedNodeColors[node.id] = getClusterColor(assignClusters(node));
+        } else {
+          updatedNodeColors[node.id] = 'rgba(200, 200, 200, 0.1)';
+        }
+      });
+      setNodeColor(updatedNodeColors);
+    } else {
+      setNodeColor(defaultColors1);
+    }
+  };
 
   return (
     <div ref={graphRef}>
+      
+      <input
+        type="text"
+        placeholder="Search by label..."
+        value={searchTerm}
+        onChange={(e) => handleSearch(e.target.value)}
+      />
+
       <ForceGraph3D
         graphData={data}
 
@@ -84,16 +145,15 @@ const ForceGraph = ({data}) => {
         linkCurvature={0.25}
         nodeVal={(node) => node.size || 7}
         linkWidth={(node)=>node.strength}
-        linkColor={(link) => {
-          const sourceNode = link.source;
-          return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'rgba(200, 200, 200, 2)';
-        }}
+        // linkColor={(link) => {
+        //   const sourceNode = link.source;
+        //   return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'orange';
+        // }}
+        linkColor={(link) => linkColor[`${link.source.id}-${link.target.id}`]}
         
 
         onNodeHover={handleNodeHover}
           
-        
-
         nodeCanvasObject={(node, ctx, globalScale) => {
         const label = node.name;
         const fontSize = 12 / globalScale;
