@@ -6,7 +6,7 @@ import {data} from './DataFile';
 const App = () => {
   return (
     <div className="App">
-      {/* <h1>3D Force Graph</h1> */}
+  
       <ForceGraph data={data}/>
     </div>
   );
