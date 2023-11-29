@@ -1,7 +1,6 @@
 import React, { useRef,useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d'; // Import the library
-import * as d3 from 'd3';
-import * as THREE from 'three';
+
 
 
 const ForceGraph = ({data}) => {

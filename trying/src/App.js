@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.css';
 import ForceGraph from './ForceGraph';
+import Sidebar from './Sidebar';
 import {data} from './DataFile';
 
 const App = () => {
   return (
     <div className="App">
   
-      <ForceGraph data={data}/>
+  {/* <Sidebar/> */}
+        <ForceGraph data={data}/>
     </div>
   );
 };
