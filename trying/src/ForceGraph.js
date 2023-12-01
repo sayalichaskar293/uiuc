@@ -1,11 +1,12 @@
 import React, { useRef,useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d'; // Import the library
+import * as d3 from 'd3';
+import * as THREE from 'three';
 
 
 const ForceGraph = ({data}) => {
   const graphRef = useRef(null);
-  const [hoveredNode, setHoveredNode] = useState(null);
-
+  const [hoveredNode, setHoveredNode] =useState(null);
   const getClusterColor = (cluster) => {
     const colorMap = {
          
@@ -20,6 +21,7 @@ const ForceGraph = ({data}) => {
     }
     return colorMap[cluster] || 'gray'; // Default to gray for unknown clusters
   };;
+  
 
   const assignClusters = (node) => {
    
@@ -43,9 +45,11 @@ const ForceGraph = ({data}) => {
     return defaultColors;
   });
 
+  
+
   const handleNodeHover = (node) => {
-    setHoveredNode(node);
     if (node) {
+      setHoveredNode(node);
       const linkedNodeIds = data.links
       .filter((link) => link.source.id === node.id || link.target.id === node.id)
       .flatMap((link) => [link.source.id, link.target.id]);
@@ -73,26 +77,23 @@ const ForceGraph = ({data}) => {
         graphData={data}
 
       nodeAutoColorBy={(node) => assignClusters(node)} 
-     
+      
       nodeColor={(node) => nodeColor[node.id]}
-
+      
         nodeLabel="name"
-        linkWidth={node => node.strength}
-        // linkAutoColorBy={'#ffff00'}
-        // linkColor={'#ffff00'}
         linkCurvature={0.25}
         nodeVal={(node) => node.size || 7}
-       
+        linkWidth={(node)=>node.strength}
+        linkColor={(link) => {
+          const sourceNode = link.source;
+          return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'rgba(200, 200, 200, 2)';
+        }}
+        
 
         onNodeHover={handleNodeHover}
+          
         
-        // linkColor={(link) => {
-        //   const sourceNode = data.nodes.find((node) => node.id === link.source);
-        //   if (sourceNode) {
-        //     return getClusterColor(assignClusters(sourceNode));
-        //   }
-        //   return 'gray'; // Fallback color if source node is not found
-        // }}
+
         nodeCanvasObject={(node, ctx, globalScale) => {
         const label = node.name;
         const fontSize = 12 / globalScale;
