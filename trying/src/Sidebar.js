@@ -2,14 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -17,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
+import View from './View';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -133,16 +127,15 @@ export default function TemporaryDrawer() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        VIEW
+          <View />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        FIND
         <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Search item"
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
@@ -153,18 +146,8 @@ export default function TemporaryDrawer() {
     </Box>
 
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      
+
     </Box>
   );
 

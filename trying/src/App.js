@@ -8,7 +8,7 @@ const App = () => {
   return (
     <div className="App">
   
-  {/* <Sidebar/> */}
+  <Sidebar/>
         <ForceGraph data={data}/>
     </div>
   );
