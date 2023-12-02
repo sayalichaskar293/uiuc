@@ -1,11 +1,31 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, List, ListItem, MenuItem, Slider, Switch, TextField, Typography } from '@mui/material'
 import React from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useContext } from "react";
+import  GameStateContext  from "./Context/useContext";
+
+
 
 const currencies = ['Links', 'Total link strength', 'Documents', 'Citations', 'Norm.citations'];
 
 const View = () => {
   const [checked, setChecked] = React.useState(true);
+
+  const {
+    search,
+        setSearch,
+        currentItemSize,
+        setItemSize,
+        currentLinkSize,
+        setLinkSize
+  } = useContext(GameStateContext);
+  
+  const handleItemSizeChange = (event, newValue) => {
+    setItemSize(newValue);
+  };
+  const handleLinkSizeChange = (event, newValue) => {
+    setLinkSize(newValue);
+  };
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -72,6 +92,7 @@ const View = () => {
       </Typography>
       <Slider
         defaultValue={30}
+        onChange={handleItemSizeChange}
         valueLabelDisplay="auto"
         step={10}
         marks
@@ -97,6 +118,7 @@ const View = () => {
       </Typography>
       <Slider
         defaultValue={30}
+        onChange={handleLinkSizeChange}
         valueLabelDisplay="auto"
         step={10}
         marks

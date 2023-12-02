@@ -1,9 +1,20 @@
 import React, { useRef,useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d'; // Import the library
-
+import  GameStateContext  from "./Context/useContext";
+import { useContext,useEffect } from "react";
 
 
 const ForceGraph = ({data}) => {
+
+  const {
+    search,
+        setSearch,
+        currentItemSize,
+        setItemSize,
+        currentLinkSize,
+        setLinkSize
+  } = useContext(GameStateContext);
+
   const graphRef = useRef(null);
   const [hoveredNode, setHoveredNode] =useState(null);
   const getClusterColor = (cluster) => {
@@ -99,39 +110,45 @@ const [linkColor, setLinkColor] = useState(() => {
     }
   };
   
-  const [searchTerm, setSearchTerm] = useState('');
-  const handleSearch = (searchInput) => {
-    setSearchTerm(searchInput);
-    const searchLower = searchInput.toLowerCase();
-
-    const matchingNode = data.nodes.find(
-      (node) => node.name.toLowerCase() === searchLower
-    );
-
-    if (matchingNode) {
-      const updatedNodeColors = {};
-      data.nodes.forEach((node) => {
-        if (node.id === matchingNode.id) {
-          updatedNodeColors[node.id] = getClusterColor(assignClusters(node));
-        } else {
-          updatedNodeColors[node.id] = 'rgba(200, 200, 200, 0.1)';
-        }
-      });
-      setNodeColor(updatedNodeColors);
-    } else {
-      setNodeColor(defaultColors1);
+  
+  // const handleSearch = (search) => {
+  //   const searchLower = search.toLowerCase(); 
+  //   const matchingNode = data.nodes.find(
+  //     (node) => node.name.toLowerCase() === searchLower
+  //   );  
+  //   if (matchingNode) {
+  //     handleNodeHover(matchingNode);
+  //   } else {
+  //     // Handle case when no matching node is found
+  //     // You can set default behavior here if needed
+  //   }
+  // };
+  useEffect(() => {
+    console.log(search);
+    if (search) {
+      const searchLower = search.toLowerCase();
+      const matchingNode = data.nodes.find(
+        (node) => node.name.toLowerCase() === searchLower
+      );
+      if (matchingNode) {
+        handleNodeHover(matchingNode);
+      } else {
+        // Handle case when no matching node is found
+        // You can set default behavior here if needed
+      }
     }
-  };
+  }, [search]);
+
 
   return (
     <div ref={graphRef}>
       
-      <input
+      {/* <input
         type="text"
         placeholder="Search by label..."
         value={searchTerm}
         onChange={(e) => handleSearch(e.target.value)}
-      />
+      /> */}
 
       <ForceGraph3D
         graphData={data}

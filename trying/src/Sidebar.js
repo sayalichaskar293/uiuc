@@ -11,8 +11,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
 import View from './View';
+import  GameStateContext  from "./Context/useContext";
+import { useContext } from "react";
+import {data} from "./DataFile"
+
 
 const Search = styled('div')(({ theme }) => ({
+  
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -55,7 +60,7 @@ const Search = styled('div')(({ theme }) => ({
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
-  
+    
     return (
       <div
         role="tabpanel"
@@ -87,9 +92,6 @@ function CustomTabPanel(props) {
   }
 
   
-   
-  
-
 export default function TemporaryDrawer() {
   const [state, setState] = React.useState({
     
@@ -97,6 +99,18 @@ export default function TemporaryDrawer() {
     
   });
 
+  const {
+    search,
+        setSearch,
+        currentItemSize,
+        setItemSize,
+        currentLinkSize,
+        setLinkSize
+  } = useContext(GameStateContext);
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
   const [value, setValue] = React.useState(0);
   
   const handleChange = (event, newValue) => {
@@ -137,8 +151,22 @@ export default function TemporaryDrawer() {
             <StyledInputBase
               placeholder="Search item"
               inputProps={{ 'aria-label': 'search' }}
+              value={search}
+              onChange={handleSearchChange}
             />
           </Search>
+
+          <div style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+  {data.nodes
+    .filter((node) => node.name.toLowerCase().includes(search.toLowerCase()))
+    .map((node) => (
+      <div key={node.id} onClick={() => setSearch(node.name)}>
+        <p>{node.name}</p>
+        {/* Add more details or actions related to each node if needed */}
+      </div>
+    ))}
+</div>
+
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         UPDATE
