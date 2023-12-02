@@ -15,6 +15,7 @@ import  GameStateContext  from "./Context/useContext";
 import { useContext } from "react";
 import {data} from "./DataFile"
 
+import Update from './Update';
 
 const Search = styled('div')(({ theme }) => ({
   
@@ -169,7 +170,7 @@ export default function TemporaryDrawer() {
 
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        UPDATE
+        <Update />
       </CustomTabPanel>
     </Box>
 
