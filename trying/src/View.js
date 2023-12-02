@@ -17,7 +17,7 @@ const View = () => {
   <ListItem style={{ display: 'block', textAlign: 'center' }} disablePadding alignItems='center'>
     <Typography fontWeight={'bold'}>Visualization</Typography>
     <Box>
-      <Typography id="input-slider" gutterBottom textAlign={'left'}>
+      <Typography id="input-slider" gutterBottom textAlign={'left'} fontSize={'13px'} color={'gray'}>
           Scale
       </Typography>
       <Slider
@@ -42,6 +42,7 @@ const View = () => {
           variant="standard"
           margin='1%'
           fullWidth
+          style={{textAlign: 'left'}}
         >
           {currencies.map((option) => (
             <MenuItem key={option} value={option}>
@@ -58,6 +59,7 @@ const View = () => {
           variant="standard"
           label='Color'
           fullWidth
+          style={{textAlign: 'left'}}
           >
           {currencies.map((option) => (
             <MenuItem key={option} value={option}>
@@ -67,7 +69,7 @@ const View = () => {
         </TextField>
     </Box>
     <Box mt='5%'>
-    <Typography variant='body2' gutterBottom textAlign={'left'}>
+    <Typography variant='body2' gutterBottom textAlign={'left'} fontSize={'13px'} color={'gray'}>
           Size variation
       </Typography>
       <Slider
@@ -92,7 +94,7 @@ const View = () => {
   <ListItem style={{ display: 'block', textAlign: 'center', marginTop: 20 }} disablePadding alignItems='center'>
     <Typography fontWeight={'bold'}>Links</Typography>
     <Box mt='5%'>
-    <Typography variant='body2' gutterBottom textAlign={'left'}>
+    <Typography variant='body2' gutterBottom textAlign={'left'} fontSize={'13px'} color={'gray'}>
           Size variation
       </Typography>
       <Slider
@@ -109,7 +111,7 @@ const View = () => {
           id="outlined-required"
           defaultValue="20"
           variant="standard"
-          label='Manimum links'
+          label='Minimum links'
           fullWidth
   />
     </Box>
@@ -123,7 +125,7 @@ const View = () => {
   />
     </Box>
     <Box mt='5%' display={'flex'} justifyContent={'space-between'}>
-    <Typography variant='body2' gutterBottom textAlign={'left'} mt='2%'>
+    <Typography variant='body2' gutterBottom textAlign={'left'} mt='2%' fontSize={'13px'} color={'gray'}>
           Curved links
       </Typography>
     <Switch
@@ -160,6 +162,7 @@ const View = () => {
           variant="standard"
           label='Score colors'
           fullWidth
+          style={{textAlign: 'left'}}
           >
           {currencies.map((option) => (
             <MenuItem key={option} value={option}>

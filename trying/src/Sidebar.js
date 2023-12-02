@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled, alpha } from '@mui/material/styles';
 import View from './View';
+import Update from './Update';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -141,7 +142,7 @@ export default function TemporaryDrawer() {
           </Search>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        UPDATE
+        <Update />
       </CustomTabPanel>
     </Box>
 
