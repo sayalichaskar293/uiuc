@@ -161,8 +161,6 @@ const [linkColor, setLinkColor] = useState(() => {
       
         nodeLabel="name"
         linkCurvature={curvedLinks ? 0.25 : 0} 
-        // nodeVal={(node) => node.size || 7}
-        // linkWidth={(node)=>node.strength}
         linkColor={(link) => {
           const sourceNode = link.source;
           return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'grey';
@@ -171,11 +169,6 @@ const [linkColor, setLinkColor] = useState(() => {
        
         nodeVal={(node) => (currentItemSize/10)*(node.size) || 7}
         linkWidth={(node)=>(currentLinkSize/10)*(node.strength)}
-        // linkColor={(link) => {
-        //   const sourceNode = link.source;
-        //   return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'orange';
-        // }}
-        // linkColor={(link) => linkColor[`${link.source.id}-${link.target.id}`]}
         
 
         onNodeHover={handleNodeHover}
