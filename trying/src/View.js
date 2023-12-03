@@ -17,7 +17,9 @@ const View = () => {
         currentItemSize,
         setItemSize,
         currentLinkSize,
-        setLinkSize
+        setLinkSize,
+        curvedLinks, 
+        setCurvedLinks
   } = useContext(GameStateContext);
   
   const handleItemSizeChange = (event, newValue) => {
@@ -30,6 +32,11 @@ const View = () => {
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
+
+  const handleToggleCurvature = () => {
+    setCurvedLinks(!curvedLinks);
+  };
+
 
   return (
     <Box>
@@ -151,8 +158,8 @@ const View = () => {
           Curved links
       </Typography>
     <Switch
-      checked={checked}
-      onChange={handleChange}
+      checked={curvedLinks}
+      onChange={handleToggleCurvature}
       inputProps={{ 'aria-label': 'controlled' }}
     />
     </Box>

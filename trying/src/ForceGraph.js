@@ -12,7 +12,9 @@ const ForceGraph = ({data}) => {
         currentItemSize,
         setItemSize,
         currentLinkSize,
-        setLinkSize
+        setLinkSize,
+        curvedLinks, 
+        setCurvedLinks
   } = useContext(GameStateContext);
 
   const graphRef = useRef(null);
@@ -158,14 +160,14 @@ const [linkColor, setLinkColor] = useState(() => {
       nodeColor={(node) => nodeColor[node.id]}
       
         nodeLabel="name"
-        linkCurvature={0.25}
+        linkCurvature={curvedLinks ? 0.25 : 0} 
         nodeVal={(node) => node.size || 7}
         linkWidth={(node)=>node.strength}
-        // linkColor={(link) => {
-        //   const sourceNode = link.source;
-        //   return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'orange';
-        // }}
-        linkColor={(link) => linkColor[`${link.source.id}-${link.target.id}`]}
+        linkColor={(link) => {
+          const sourceNode = link.source;
+          return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'grey';
+        }}
+        // linkColor={(link) => linkColor[`${link.source.id}-${link.target.id}`]}
         
 
         onNodeHover={handleNodeHover}
