@@ -13,7 +13,7 @@ import { styled, alpha } from '@mui/material/styles';
 import View from './View';
 import  GameStateContext  from "./Context/useContext";
 import { useContext } from "react";
-import {data} from "./DataFile"
+import {data} from "./datafile2"
 
 import Update from './Update';
 

@@ -5,6 +5,9 @@ import { useContext,useEffect } from "react";
 
 
 const ForceGraph = ({data}) => {
+  const [nodeLabel, setNodeLabel] = useState('name');
+  const [permanentLabel, setPermanentLabel] = useState(null);
+
 
   const {
     search,
@@ -19,6 +22,8 @@ const ForceGraph = ({data}) => {
 
   const graphRef = useRef(null);
   const [hoveredNode, setHoveredNode] =useState(null);
+  const [searchedNode, setsearchedNode] =useState(null);
+
   const getClusterColor = (cluster) => {
     const colorMap = {         
       1: '#00FF00',  
@@ -27,6 +32,23 @@ const ForceGraph = ({data}) => {
       4: '#FF0000',
       5: '#FFFFFF',
       6: '#800080',
+      7: '#FB2576',
+      8: '#FF10F0',
+      9: '#FF6700',
+      10: '#9A7B4F',
+      11: '#ADFF2F',
+      12: '#007500',
+      13: '#00F5FF',
+      14: '#CEEDC7',
+      15: '#F4C2C2',
+      16: '#E5B80B',
+      17: '#E97451',
+      18: '#6f5fe0',
+      19:'#ffa600',
+      20:'#5G30DE',
+      21:'#1E90FF',
+      22: '#C6E6FB'
+
     }
     return colorMap[cluster] || 'gray'; // Default to gray for unknown clusters
   };;
@@ -65,6 +87,8 @@ const [linkColor, setLinkColor] = useState(() => {
   return defaultColors2;
 });
 
+
+
   const [nodeColor, setNodeColor] = useState(() => {
     const defaultColors = {};
     data.nodes.forEach((node) => {
@@ -76,7 +100,7 @@ const [linkColor, setLinkColor] = useState(() => {
   const handleNodeHover = (node) => {
     if (node) {
       setHoveredNode(node);
-  
+      // console.log(node)
       const linkedNodeIds = data.links
         .filter((link) => link.source.id === node.id || link.target.id === node.id)
         .flatMap((link) => [link.source.id, link.target.id]);
@@ -106,6 +130,40 @@ const [linkColor, setLinkColor] = useState(() => {
   
       setNodeColor(updatedColors);
       setLinkColor(updatedLinkColors);
+      setNodeLabel(getNodeLabel(node));
+      console.log(nodeLabel);
+    } else {
+  
+      setHoveredNode(null);
+      setNodeColor(defaultColors1);
+      setLinkColor(defaultColors2);
+      setNodeLabel('name');
+    }
+  };
+  
+  const handleNodeSearch = (node) => {
+    if (node) {
+    setsearchedNode(node);
+  
+      const updatedColors = {};
+      const updatedLinkColors = { ...linkColor }; // Create a copy of current link colors
+  
+      data.nodes.forEach((n) => {
+        updatedColors[n.id] = n.id === node.id ? getClusterColor(assignClusters(n)) : 'rgba(200, 200, 200, 0.5)';
+      });
+  
+      data.links.forEach((link) => {
+        const sourceId = link.source.id;
+        const targetId = link.target.id;
+        const linkId = `${sourceId}-${targetId}`;
+  
+        updatedLinkColors[linkId] = 'rgba(200, 200, 200, 0.5)';
+      });
+  
+      setNodeColor(updatedColors);
+      setLinkColor(updatedLinkColors);
+      setNodeLabel(getNodeLabel(node));
+      console.log(nodeLabel);
     } else {
       setNodeColor(defaultColors1);
       setLinkColor(defaultColors2);
@@ -125,22 +183,48 @@ const [linkColor, setLinkColor] = useState(() => {
   //     // You can set default behavior here if needed
   //   }
   // };
+
   useEffect(() => {
-    console.log(search);
+    const permanentLabels = data.nodes
+      .filter((node) => node.size > 250)
+      .reduce((labels, node) => {
+        labels[node.id] = node.name;
+        return labels;
+      }, {});
+      // console.log(permanentLabels)
+      setPermanentLabel(
+        Object.values(permanentLabels).join(', ')
+      );
+      console.log(permanentLabel)
+  }, []);
+
+  useEffect(() => {
+    // console.log(search);
     if (search) {
       const searchLower = search.toLowerCase();
       const matchingNode = data.nodes.find(
         (node) => node.name.toLowerCase() === searchLower
       );
       if (matchingNode) {
-        handleNodeHover(matchingNode);
+        handleNodeSearch(matchingNode);
+        // console.log(matchingNode)
+        setNodeLabel(getNodeLabel(matchingNode));
       } else {
+        setNodeLabel('name');
+        console.log(matchingNode)
         // Handle case when no matching node is found
         // You can set default behavior here if needed
       }
     }
   }, [search]);
 
+  const getNodeLabel = (node) => {
+    if (search && node.name.toLowerCase().includes(search.toLowerCase())) {
+      return node.name;
+    } else {
+      return permanentLabel.includes(node.name) ? node.name : 'name';
+    }
+  };
 
   return (
     <div ref={graphRef}>
@@ -158,43 +242,23 @@ const [linkColor, setLinkColor] = useState(() => {
       nodeAutoColorBy={(node) => assignClusters(node)} 
       
       nodeColor={(node) => nodeColor[node.id]}
-      
-        nodeLabel="name"
+      nodeLabel={ nodeLabel || permanentLabel}
+
+      // nodeLabel='name'
         linkCurvature={curvedLinks ? 0.25 : 0} 
-        linkColor={(link) => {
-          const sourceNode = link.source;
-          return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'grey';
-        }}
-        // linkColor={(link) => linkColor[`${link.source.id}-${link.target.id}`]}
+        // linkColor={(link) => {
+        //   const sourceNode = link.source;
+        //   return sourceNode ? getClusterColor(assignClusters(sourceNode)) : 'grey';
+        // }}
+        linkColor={(link) => linkColor[`${link.source.id}-${link.target.id}`]}
        
         nodeVal={(node) => (currentItemSize/10)*(node.size) || 7}
         linkWidth={(node)=>(currentLinkSize/10)*(node.strength)}
         
-
-        onNodeHover={handleNodeHover}
+        onBackgroundClick={() => handleNodeHover(null)}
+        onNodeClick={handleNodeHover}
           
-        nodeCanvasObject={(node, ctx, globalScale) => {
-        const label = node.name;
-        const fontSize = 12 / globalScale;
-
-        ctx.font = `${fontSize}px Sans-Serif`;
-        const textWidth = ctx.measureText(label).width;
-        const textHeight = fontSize;
-
-        const scaleFactor = 0.1; // Adjust as needed
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; // White with transparency
-        ctx.fillRect(
-          node.x - textWidth / 2 * scaleFactor,
-          node.y - textHeight / 2 * scaleFactor,
-          textWidth * scaleFactor,
-          textHeight * scaleFactor
-        );
-
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'black'; // Adjust text color as needed
-        ctx.fillText(label, node.x, node.y);
-      }}
+    
      
       />
       {hoveredNode && (
